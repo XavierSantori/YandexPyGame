@@ -1,0 +1,17 @@
+{
+  "defaults": {
+    "colours": {
+      "normal_text": "#0ECFD3"
+    }
+  },
+  "label": {
+    "misc": {
+      "text_horiz_alignment": "mid"
+    },
+    "font": {
+      "name": "Arial",
+      "size": 30,
+      "regular_path": "src/ofont.ru_Arial.ttf"
+    }
+  }
+}
