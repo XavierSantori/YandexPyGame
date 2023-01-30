@@ -61,6 +61,7 @@ class Game:
 
         self.Enemy = []
         self.EnemyCount = 5
+        self.EnemySpeed = 0.2
 
         self.Bullet = []
         self.BulletSpeed = 2
@@ -97,7 +98,7 @@ class Game:
         EnemyMoveX = random.randrange(-3, 3)
         EnemyMoveY = random.randrange(1, 2)
 
-        return [EnemyX, EnemyY, EnemyMoveX * 0.3, EnemyMoveY * 0.2]
+        return [EnemyX, EnemyY, EnemyMoveX * 0.3, EnemyMoveY * self.EnemySpeed]
 
     def EnemyUpdate(self, Enemy):
         Enemy[1] += Enemy[3]
@@ -148,7 +149,7 @@ class Game:
 
     def start_screen(self):
         print("Game: start")
-        intro_text = ["Space invaders", ""]
+        intro_text = ["Space invaders", "Choose difficulty"]
 
         fon = pygame.transform.scale(load_image('img.png'),
                                      (self.display_size[0], self.display_size[1]))
@@ -162,9 +163,19 @@ class Game:
             text_coord += intro_rect.height
             lbl = gui.elements.UILabel(intro_rect, line, manager=self.ui)
 
-        play_button = gui.elements.UIButton(relative_rect=pygame.Rect((250, text_coord + 10), (100, 50)),
+        play_button = gui.elements.UIButton(relative_rect=pygame.Rect((250, text_coord + 100), (100, 50)),
                                             text='play >',
                                             manager=self.ui)
+
+        diff_button_1 = gui.elements.UIButton(relative_rect=pygame.Rect((200, text_coord + 20), (50, 50)),
+                                              text='1',
+                                              manager=self.ui)
+        diff_button_2 = gui.elements.UIButton(relative_rect=pygame.Rect((280, text_coord + 20), (50, 50)),
+                                              text='2',
+                                              manager=self.ui)
+        diff_button_3 = gui.elements.UIButton(relative_rect=pygame.Rect((360, text_coord + 20), (50, 50)),
+                                              text='3',
+                                              manager=self.ui)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
@@ -172,14 +183,24 @@ class Game:
                 if event.type == gui.UI_BUTTON_PRESSED:
                     if event.ui_element == play_button:
                         return "level"
+                    if event.ui_element == diff_button_1:
+                        self.EnemySpeed = 0.2
+                    if event.ui_element == diff_button_2:
+                        self.EnemySpeed = 0.4
+                    if event.ui_element == diff_button_3:
+                        self.EnemySpeed = 0.6
                 #
+
                 self.ui.process_events(event)
             #
+
             self.ui.draw_ui(self.display)
 
             pygame.display.flip()
+
             ms = self.clock.tick(FPS) / 1000.0
             self.ui.update(ms)
+
 
     def play_level(self):
         for i in range(self.EnemyCount):
@@ -290,6 +311,9 @@ class Game:
         play_button = gui.elements.UIButton(relative_rect=pygame.Rect((225, text_coord + 30), (150, 50)),
                                             text='Play again >',
                                             manager=self.ui)
+        to_start = gui.elements.UIButton(relative_rect=pygame.Rect((200, text_coord + 100), (200, 50)),
+                                            text='Go to start menu >',
+                                            manager=self.ui)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
@@ -301,6 +325,12 @@ class Game:
                         self.Enemy = []
                         self.Bullet = []
                         return "level"
+                    if event.ui_element == to_start:
+                        self.HP = 100
+                        self.Score = 0
+                        self.Enemy = []
+                        self.Bullet = []
+                        return "start"
                 #
                 self.ui.process_events(event)
             #
